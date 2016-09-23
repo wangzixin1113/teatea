@@ -1,4 +1,4 @@
-exports.mapRequestHandler = function(app, upload) {
+exports.requestMapper = function(app, upload) {
     var userModel = require('./Controllers/UserController')
 
     app.get('/', userModel.login);
