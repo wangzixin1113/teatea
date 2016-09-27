@@ -16,10 +16,12 @@ app.set('views', path.join(__dirname, 'Views'));
 app.use(express.static(path.join(__dirname, 'Public')));
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(function(req, res, next) {
-    // logger.PrintRequest(req);
-    next();
-});
+// app.use(function(req, res, next) {
+//     var chunk = logger.interceptResponse(res);
+//     next();
+//     logger.PrintRequest(req);
+//     logger.PrintResponse(chunk);
+// });
 
 router.requestMapper(app, upload);
 

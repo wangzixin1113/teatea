@@ -11,8 +11,17 @@ colors.setTheme({
     debug: 'blue',
     error: 'red'
 });
+var printTag = exports.PrintTag = function(tag) {
+    console.log(colors.silly(tag));
+}
 
-exports.PrintRequest = function(req) {
+var print = exports.print = (tag, msg) => {
+    console.log(colors.prompt(Date.now() + ' ') + colors.info(tag + ':') + colors.data(msg));
+}
+
+
+exports.PrintRequest = (req, tag) => {
+    if (tag) printTag(tag);
     console.log('Request Info Start'.grey);
     console.log(colors.info('HOST   :') + req.hostname);
     console.log(colors.info('FROM   :') + req.ip);
@@ -23,17 +32,19 @@ exports.PrintRequest = function(req) {
     console.log('');
 }
 
-exports.PrintResponse = function(res) {
+exports.PrintResponse = (res, tag) => {
+    if (tag) printTag(tag);
     console.log('Response Info Start'.grey);
-    console.log(colors.info('CODE   :') + res.body);
-    console.log(colors.info('MESSAGE:') + res.body);
+    console.log(colors.info('CODE:') + res.code);
+    console.log(colors.info('MESSAGE:') + res.message);
     console.log('Response Info End'.grey);
     console.log('');
     // console.log(colors.data('STATUS :') + res.status);
     // console.log(colors.data('DATA   :'));
 }
 
-exports.PrintDocument = function(docs) {
+exports.PrintDocument = (docs, tag) => {
+    if (tag) printTag(tag);
     console.log('Document Infos Start'.grey);
     docs.forEach(function(doc, index) {
         console.log(colors.info('DOCUMENT:'));
@@ -44,10 +55,31 @@ exports.PrintDocument = function(docs) {
     console.log('');
 }
 
-exports.WrapRequest = function(func) {
+exports.WrapRequest = (func) => {
     return function(req, res, next) {
         exports.PrintRequest(req);
         func(req, res, next);
         exports.PrintResponse(res);
     }
+}
+
+exports.interceptResponse = (res) => {
+    var oldWrite = res.write;
+    var oldEnd = res.end;
+    var oldJson = res.json;
+    var chunks = [];
+
+    res.write = (chunk) => {
+        chunks.push(chunk);
+        oldWrite.apply(res, arguments);
+    };
+    res.json = (chunk) => {
+        chunks.push(chunk);
+        oldJson.apply(res, arguments);
+    }
+    res.end = (chunk) => {
+        if (chunk) chunks.push(chunk);
+        oldEnd.apply(res, arguments);
+    };
+    return chunks;
 }
