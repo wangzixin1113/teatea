@@ -1,7 +1,7 @@
 var lensPriceFetcher = require('../Controllers/LensPriceFetcher');
 
 exports.startSchedule = () => {
-    setInterval(cb, 3600);
+    setInterval(cb, 24 * 60 * 60 * 1000);
 }
 
 var cb = () => {

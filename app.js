@@ -7,8 +7,10 @@ var router = require('./router');
 var config = require('./config');
 var dbHelper = require('./Utils/MongodbHelper');
 var logger = require('./Utils/Logger');
+var timmer = require('./Utils/Timmer');
 var app = express();
 var upload = multer(); //for multi-part/form-data
+
 
 app.set('port', config.port);
 app.set('views', path.join(__dirname, 'Views'));
@@ -27,6 +29,10 @@ router.requestMapper(app, upload);
 
 dbHelper.getMongo().Promise = global.Promise;
 dbHelper.connect();
+/*
+每日获取镜头价格
+ */
+timmer.startSchedule();
 
 http.createServer(app)
     .listen(app.get('port'), function() {
