@@ -5,6 +5,5 @@ exports.startSchedule = () => {
 }
 
 var cb = () => {
-    if ((new Date).getHours == 0)
-        lensPriceFetcher.fetchPrices();
+    lensPriceFetcher.fetchPrices();
 }
