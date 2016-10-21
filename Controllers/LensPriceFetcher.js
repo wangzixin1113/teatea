@@ -33,32 +33,33 @@ var saveDate = ($) => {
                         lens.price = obj.p;
                         lensList.push(lens);
                         Logger.print(LOGTAG, 'Lens Has Price:' + lens);
+
+                        Lens.findOne({ 'id': lens.sku, 'source': 'JD' }, (err, doc) => {
+                            if (doc) {
+                                var today = { 'price': lens.price, 'date': Date.now() };
+                                console.log(JSON.stringify(today));
+                                doc.days.push(today);
+                                doc.price = lens.price;
+                                //doc.editDate = new Date;
+                                doc.save((err) => {
+                                    if (err) Logger.print(LOGTAG, 'err eccur' + err + 'sku:' + lens.sku);
+                                    else { Logger.print(LOGTAG, 'updated 1 data' + doc); }
+                                });
+                            } else {
+                                var lensEntity = new Lens();
+                                lensEntity.name = lens.name;
+                                lensEntity.price = lens.price;
+                                lensEntity.id = lens.sku;
+                                lensEntity.source = 'JD';
+                                lensEntity.created = Date.now();
+                                lensEntity.days.push({ 'price': lens.price, 'date': Date.now() });
+                                lensEntity.save((err) => {
+                                    if (err) Logger.print(LOGTAG, err);
+                                    Logger.print(LOGTAG, 'inserted 1 data' + lensEntity);
+                                });
+                            }
+                        });
                     }
-                    Lens.findOne({ 'id': lens.sku, 'source': 'JD' }, (err, doc) => {
-                        if (doc) {
-                            var today = { 'price': lens.price, 'date': Date.now() };
-                            console.log(JSON.stringify(today));
-                            doc.days.push(today);
-                            doc.price = lens.price;
-                            //doc.editDate = new Date;
-                            doc.save((err) => {
-                                if (err) Logger.print(LOGTAG, 'err eccur' + err + 'sku:' + lens.sku);
-                                else { Logger.print(LOGTAG, 'updated 1 data' + doc); }
-                            });
-                        } else {
-                            var lensEntity = new Lens();
-                            lensEntity.name = lens.name;
-                            lensEntity.price = lens.price;
-                            lensEntity.id = lens.sku;
-                            lensEntity.source = 'JD';
-                            lensEntity.created = Date.now();
-                            lensEntity.days.push({ 'price': lens.price, 'date': Date.now() });
-                            lensEntity.save((err) => {
-                                if (err) Logger.print(LOGTAG, err);
-                                Logger.print(LOGTAG, 'inserted 1 data' + lensEntity);
-                            });
-                        }
-                    });
                 }
             });
     });
@@ -66,7 +67,7 @@ var saveDate = ($) => {
 
 //define a function fetch url, then call saveDate
 var fetchUrl = (url, callback) => {
-    console.log(url);
+    Logger.print(LOGTAG, 'fetchURL:' + url);
     superagent.get(url).use(jsonp)
         .end((err, sres) => {
             if (err) {
@@ -76,7 +77,7 @@ var fetchUrl = (url, callback) => {
             var $ = cheerio.load(sres.text);
 
             if (typeof callback === 'function')
-                pageMax = $('.p-num a:nth-last-child(2)').text(), console.log(pageMax), callback();
+                pageMax = $('.p-num a:nth-last-child(2)').text(), Logger.print(LOGTAG,'pageMax:'+ pageMax), callback();
 
 
             saveDate($);
