@@ -27,10 +27,10 @@ var saveDate = ($) => {
             .end((err, res) => {
                 if (res.text) {
                     var obj = JSON.parse(res.text)[0];
-                    if (typeof obj == "object" && typeof obj.p == "string") {
+                    if (typeof obj.p != "undefined") {
                         lens.price = obj.p;
                         lensList.push(lens);
-                        Logger.print(LOGTAG, lens);
+                        Logger.print(LOGTAG, 'Lens Has Price:' + lens);
                     }
                     Lens.findOne({ 'id': lens.sku, 'source': 'JD' }, (err, doc) => {
                         if (doc) {
