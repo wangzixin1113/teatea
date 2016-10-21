@@ -26,6 +26,7 @@ var saveDate = ($) => {
         superagent.get(jdPriceUrl + lens.sku)
             .end((err, res) => {
                 if (res.text) {
+                    Logger.print(LOGTAG,'PriceUrl:' + jdLensUrl + lens.sku);
                     var obj = JSON.parse(res.text)[0];
                     if (typeof obj.p != "undefined") {
                         lens.price = obj.p;
