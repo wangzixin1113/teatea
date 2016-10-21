@@ -40,8 +40,8 @@ var saveDate = ($) => {
                             doc.price = lens.price;
                             //doc.editDate = new Date;
                             doc.save((err) => {
-                                if (err) Logger.print(LOGTAG, err);
-                                else Logger.print(LOGTAG, 'updated 1 data');
+                                if (err) Logger.print(LOGTAG, 'err eccur' + err + 'sku:' + lens.sku);
+                                else { Logger.print(LOGTAG, 'updated 1 data' + doc); }
                             });
                         } else {
                             var lensEntity = new Lens();
@@ -53,7 +53,7 @@ var saveDate = ($) => {
                             lensEntity.days.push({ 'price': lens.price, 'date': Date.now() });
                             lensEntity.save((err) => {
                                 if (err) Logger.print(LOGTAG, err);
-                                Logger.print(LOGTAG, 'inserted 1 data');
+                                Logger.print(LOGTAG, 'inserted 1 data' + lensEntity);
                             });
                         }
                     });
