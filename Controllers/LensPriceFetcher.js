@@ -27,7 +27,7 @@ var saveDate = ($) => {
             .end((err, res) => {
                 if (res.text) {
                     var obj = JSON.parse(res.text)[0];
-                    if (typeof obj == "object" && typeof obj.p == "object") {
+                    if (typeof obj == "object" && typeof obj.p == "string") {
                         lens.price = obj.p;
                         lensList.push(lens);
                         Logger.print(LOGTAG, lens);
@@ -41,7 +41,7 @@ var saveDate = ($) => {
                             //doc.editDate = new Date;
                             doc.save((err) => {
                                 if (err) Logger.print(LOGTAG, err);
-                                Logger.print(LOGTAG, 'updated 1 data');
+                                else Logger.print(LOGTAG, 'updated 1 data');
                             });
                         } else {
                             var lensEntity = new Lens();
