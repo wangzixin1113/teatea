@@ -9,7 +9,7 @@ Mongoose.model(ModelTag, new Mongoose.Schema({
     days: [{ price: Number, sales: Number, date: Date }],
     id: String,
     source: String,
-    created: { type: Date, default: Date.now },
+    created: { type: Date },
     edited: { type: Date, default: Date.now }
 }), Collection);
 

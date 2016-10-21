@@ -32,11 +32,11 @@ var saveDate = ($) => {
 
                     Lens.findOne({ 'id': lens.sku, 'source': 'JD' }, (err, doc) => {
                         if (doc) {
-                            var today = { 'price': lens.price, 'date': new Date };
+                            var today = { 'price': lens.price, 'date': Date.now() };
                             console.log(JSON.stringify(today));
                             doc.days.push(today);
                             doc.price = lens.price;
-                            doc.editDate = new Date;
+                            //doc.editDate = new Date;
                             doc.save((err) => {
                                 if (err) Logger.print(LOGTAG, err);
                                 Logger.print(LOGTAG, 'updated 1 data');
@@ -47,7 +47,8 @@ var saveDate = ($) => {
                             lensEntity.price = lens.price;
                             lensEntity.id = lens.sku;
                             lensEntity.source = 'JD';
-                            lensEntity.days.push({ 'price': lens.price, 'date': new Date });
+                            lensEntity.created = Date.now();
+                            lensEntity.days.push({ 'price': lens.price, 'date': Date.now() });
                             lensEntity.save((err) => {
                                 if (err) Logger.print(LOGTAG, err);
                                 Logger.print(LOGTAG, 'inserted 1 data');
