@@ -26,10 +26,12 @@ var saveDate = ($) => {
         superagent.get(jdPriceUrl + lens.sku)
             .end((err, res) => {
                 if (res.text) {
-                    lens.price = JSON.parse(res.text)[0].p;
-                    lensList.push(lens);
-                    Logger.print(LOGTAG, lens);
-
+                    var obj = JSON.parse(res.text)[0];
+                    if (typeof obj == "object" && typeof obj.p == "object") {
+                        lens.price = obj.p;
+                        lensList.push(lens);
+                        Logger.print(LOGTAG, lens);
+                    }
                     Lens.findOne({ 'id': lens.sku, 'source': 'JD' }, (err, doc) => {
                         if (doc) {
                             var today = { 'price': lens.price, 'date': Date.now() };
